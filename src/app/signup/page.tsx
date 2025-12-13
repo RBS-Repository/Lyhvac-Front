@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { firebaseAuth } from "@/lib/firebase";
 import Swal from 'sweetalert2';
+import { API_ENDPOINTS } from '@/lib/api';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -157,7 +158,7 @@ export default function SignupPage() {
       
       // Create user record in MongoDB
       try {
-        await fetch('http://localhost:5001/api/users', {
+        await fetch(API_ENDPOINTS.users, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

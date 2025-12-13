@@ -6,6 +6,7 @@ import AdminLayout from '@/components/AdminLayout';
 import { Card, CardStat } from '@/components/admin/Card';
 import { FormButton } from '@/components/admin/FormInput';
 import { motion } from 'framer-motion';
+import { API_ENDPOINTS } from '@/lib/api';
 
 interface Product {
   _id: string;
@@ -25,7 +26,7 @@ const AdminProductsPage = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/products');
+      const res = await fetch(API_ENDPOINTS.products);
       if (!res.ok) {
         throw new Error('Failed to fetch products');
       }
@@ -45,7 +46,7 @@ const AdminProductsPage = () => {
   const deleteHandler = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
       try {
-        const res = await fetch(`http://localhost:5001/api/products/${id}`, {
+        const res = await fetch(API_ENDPOINTS.productById(id), {
           method: 'DELETE',
         });
 

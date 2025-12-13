@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState, ReactNode } fr
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { firebaseAuth } from "@/lib/firebase";
 import Swal from 'sweetalert2';
+import { API_ENDPOINTS } from '@/lib/api';
 
 type AuthContextValue = {
   isLoggedIn: boolean;
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               const controller = new AbortController();
               const timeoutId = setTimeout(() => controller.abort(), 3000);
               
-              const userRes = await fetch(`http://localhost:5001/api/users/uid/${user.uid}`, {
+              const userRes = await fetch(API_ENDPOINTS.userByUid(user.uid), {
                 signal: controller.signal
               });
               

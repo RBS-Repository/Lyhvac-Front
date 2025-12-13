@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "@/lib/firebase";
+import { API_ENDPOINTS } from '@/lib/api';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -56,10 +57,10 @@ export default function LoginPage() {
       
       // Check if user exists in MongoDB, create if not (for existing Firebase users)
       try {
-        const userRes = await fetch(`http://localhost:5001/api/users/uid/${userCredential.user.uid}`);
+        const userRes = await fetch(API_ENDPOINTS.userByUid(userCredential.user.uid));
         if (!userRes.ok) {
           // User doesn't exist in MongoDB, create them
-          await fetch('http://localhost:5001/api/users', {
+          await fetch(API_ENDPOINTS.users, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import AdminLayout from '@/components/AdminLayout';
 import { Card } from '@/components/admin/Card';
 import { FormInput, FormTextarea, FormSelect, FormButton } from '@/components/admin/FormInput';
+import { API_ENDPOINTS } from '@/lib/api';
 
 interface Category {
   _id: string;
@@ -39,7 +40,7 @@ const ProductEditPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/categories');
+        const res = await fetch(API_ENDPOINTS.categories);
         const data = await res.json();
         setCategories(data);
       } catch (err) {
@@ -53,7 +54,7 @@ const ProductEditPage = () => {
       const fetchProduct = async () => {
         setLoading(true);
         try {
-          const res = await fetch(`http://localhost:5001/api/products/${id}`);
+          const res = await fetch(API_ENDPOINTS.productById(id));
           if (!res.ok) throw new Error('Failed to fetch product data.');
           const data = await res.json();
           setName(data.name);
@@ -111,8 +112,8 @@ const ProductEditPage = () => {
     
     try {
       const url = isNewProduct
-        ? 'http://localhost:5001/api/products'
-        : `http://localhost:5001/api/products/${id}`;
+        ? API_ENDPOINTS.products
+        : API_ENDPOINTS.productById(id);
       
       const method = isNewProduct ? 'POST' : 'PUT';
 
@@ -146,7 +147,7 @@ const ProductEditPage = () => {
     formData.append('image', file);
 
     try {
-      const res = await fetch('http://localhost:5001/api/upload', {
+      const res = await fetch(API_ENDPOINTS.upload, {
         method: 'POST',
         body: formData,
       });
@@ -404,25 +405,25 @@ const ProductEditPage = () => {
                     .map((img, idx) => ({ img: img.trim(), idx }))
                     .filter(({ img }) => !!img)
                     .map(({ img, idx }) => (
-                      <div key={idx} className="relative group">
-                        <img
+                    <div key={idx} className="relative group">
+                      <img
                           src={img}
-                          alt={`Preview ${idx + 1}`}
-                          className="w-full h-32 object-cover rounded-lg border-2 border-gray-200 group-hover:border-blue-500 transition-all"
-                          onError={(e) => {
+                        alt={`Preview ${idx + 1}`}
+                        className="w-full h-32 object-cover rounded-lg border-2 border-gray-200 group-hover:border-blue-500 transition-all"
+                        onError={(e) => {
                             (e.target as HTMLImageElement).src =
                               'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23f3f4f6" width="100" height="100"/%3E%3Ctext fill="%239ca3af" font-size="14" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
-                          }}
-                        />
-                        {idx === 0 && (
-                          <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-md">
-                            Main
-                          </span>
-                        )}
-                      </div>
+                        }}
+                      />
+                      {idx === 0 && (
+                        <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-md">
+                          Main
+                        </span>
+                      )}
+                    </div>
                     ))}
-                </div>
-              )}
+              </div>
+            )}
             </div>
           </Card>
 

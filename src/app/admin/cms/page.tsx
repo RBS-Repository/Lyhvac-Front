@@ -10,6 +10,7 @@ import AdminLayout from '@/components/AdminLayout';
 import { Card } from '@/components/admin/Card';
 import { FormInput, FormTextarea, FormSelect, FormButton } from '@/components/admin/FormInput';
 import { motion } from 'framer-motion';
+import { API_ENDPOINTS } from '@/lib/api';
 
 type TabType = 'hero' | 'banner' | 'ads' | 'media' | 'categories' | 'products' | 'category-management' | 'contact' | 'contact-page' | 'sidebar';
 
@@ -39,7 +40,7 @@ export default function CMSAdminPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/categories');
+        const response = await fetch(API_ENDPOINTS.categories);
         if (response.ok) {
           const data = await response.json();
           setCategories(data);

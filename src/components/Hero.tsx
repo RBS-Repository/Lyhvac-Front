@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSidebar } from './CategorySidebar';
 import { useCMS } from './CMSContext';
+import { API_ENDPOINTS } from '@/lib/api';
 
 interface Product {
   _id: string;
@@ -43,8 +44,8 @@ const Hero = () => {
     const fetchData = async () => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([
-          fetch('http://localhost:5001/api/products'),
-          fetch('http://localhost:5001/api/categories')
+          fetch(API_ENDPOINTS.products),
+          fetch(API_ENDPOINTS.categories)
         ]);
         
         const productsData = await productsRes.json();

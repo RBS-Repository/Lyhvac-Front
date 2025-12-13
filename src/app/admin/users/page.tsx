@@ -5,6 +5,7 @@ import AdminLayout from '@/components/AdminLayout';
 import { Card } from '@/components/admin/Card';
 import { FormInput, FormButton } from '@/components/admin/FormInput';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_ENDPOINTS } from '@/lib/api';
 
 interface User {
   _id: string;
@@ -33,7 +34,7 @@ const AdminUsersPage = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5001/api/users');
+      const res = await fetch(API_ENDPOINTS.users);
       if (!res.ok) {
         throw new Error('Failed to fetch users');
       }
@@ -54,7 +55,7 @@ const AdminUsersPage = () => {
     if (!selectedUser) return;
 
     try {
-      const res = await fetch(`http://localhost:5001/api/users/${selectedUser._id}/disable`, {
+      const res = await fetch(API_ENDPOINTS.userDisable(selectedUser._id), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +85,7 @@ const AdminUsersPage = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:5001/api/users/${userId}/enable`, {
+      const res = await fetch(API_ENDPOINTS.userEnable(userId), {
         method: 'PUT',
       });
 
@@ -104,7 +105,7 @@ const AdminUsersPage = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:5001/api/users/${userId}`, {
+      const res = await fetch(API_ENDPOINTS.userById(userId), {
         method: 'DELETE',
       });
 

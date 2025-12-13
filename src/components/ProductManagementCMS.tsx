@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, FormEvent } from 'react';
+import { API_ENDPOINTS } from '@/lib/api';
 
 interface Product {
   _id?: string;
@@ -50,7 +51,7 @@ export default function ProductManagementCMS() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/categories');
+      const res = await fetch(API_ENDPOINTS.categories);
       const data = await res.json();
       setCategories(data);
     } catch (err) {
@@ -60,7 +61,7 @@ export default function ProductManagementCMS() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/products');
+      const res = await fetch(API_ENDPOINTS.products);
       const data = await res.json();
       setProducts(data);
     } catch (err: any) {
@@ -88,7 +89,7 @@ export default function ProductManagementCMS() {
     formData.append('image', file);
 
     try {
-      const res = await fetch('http://localhost:5001/api/upload', {
+      const res = await fetch(API_ENDPOINTS.upload, {
         method: 'POST',
         body: formData,
       });
@@ -133,8 +134,8 @@ export default function ProductManagementCMS() {
 
     try {
       const url = editingProduct
-        ? `http://localhost:5001/api/products/${editingProduct._id}`
-        : 'http://localhost:5001/api/products';
+        ? API_ENDPOINTS.productById(editingProduct._id!)
+        : API_ENDPOINTS.products;
 
       const method = editingProduct ? 'PUT' : 'POST';
 
@@ -180,7 +181,7 @@ export default function ProductManagementCMS() {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
     try {
-      const res = await fetch(`http://localhost:5001/api/products/${id}`, {
+      const res = await fetch(API_ENDPOINTS.productById(id), {
         method: 'DELETE',
       });
 

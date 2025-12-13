@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useSidebar } from './CategorySidebar';
 import { useAuth } from './AuthContext';
 import Header from './Header';
+import { API_ENDPOINTS } from '@/lib/api';
 
 interface Product {
   _id: string;
@@ -128,7 +129,7 @@ const ProductsPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/products');
+        const res = await fetch(API_ENDPOINTS.products);
         const data = await res.json();
         setAllProducts(data);
       } catch (error) {
@@ -138,7 +139,7 @@ const ProductsPage = () => {
 
     const fetchCategories = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/categories');
+        const res = await fetch(API_ENDPOINTS.categories);
         const data: Category[] = await res.json();
         const categoryNames = ["All", ...data.map(cat => cat.name)];
         setCategories(categoryNames);

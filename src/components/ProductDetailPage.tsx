@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useSidebar } from './CategorySidebar';
 import { useAuth } from './AuthContext';
 import Header from './Header';
+import { API_ENDPOINTS } from '@/lib/api';
 
 // --- TYPE DEFINITIONS ---
 interface Product {
@@ -35,7 +36,7 @@ const formatPrice = (price: number): string => {
 // Products will be fetched from API
 const fetchProductById = async (id: string): Promise<Product | null> => {
   try {
-    const res = await fetch(`http://localhost:5001/api/products/${id}`);
+    const res = await fetch(API_ENDPOINTS.productById(id));
     if (!res.ok) return null;
     const data = await res.json();
     
@@ -52,7 +53,7 @@ const fetchProductById = async (id: string): Promise<Product | null> => {
 
 const fetchAllProducts = async (): Promise<Product[]> => {
   try {
-    const res = await fetch('http://localhost:5001/api/products');
+    const res = await fetch(API_ENDPOINTS.products);
     if (!res.ok) return [];
     const data = await res.json();
     

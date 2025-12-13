@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_ENDPOINTS } from '@/lib/api';
 
 interface Category {
   _id: string;
@@ -19,15 +20,13 @@ const CategoryManagement = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const API_URL = 'http://localhost:5001/api/categories';
-
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(API_URL);
+      const res = await fetch(API_ENDPOINTS.categories);
       const data = await res.json();
       setCategories(data);
     } catch (err) {
@@ -43,7 +42,7 @@ const CategoryManagement = () => {
     setSuccess(null);
 
     try {
-      const url = editingId ? `${API_URL}/${editingId}` : API_URL;
+      const url = editingId ? API_ENDPOINTS.categoryById(editingId) : API_ENDPOINTS.categories;
       const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {

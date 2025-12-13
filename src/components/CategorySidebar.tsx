@@ -3,6 +3,7 @@
 import { useState, createContext, useContext, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_ENDPOINTS } from '@/lib/api';
 
 // Create a context for sidebar state
 interface SidebarContextType {
@@ -57,7 +58,7 @@ const CategorySidebar = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/categories');
+        const res = await fetch(API_ENDPOINTS.categories);
         const data = await res.json();
         setCategories(data);
       } catch (error) {

@@ -10,6 +10,7 @@
     "dev:all": "concurrently \"npm run dev\" \"cd backend && npm run dev\""
   },
   "dependencies": {
+    "cloudinary": "^2.8.0",
     "firebase": "^12.4.0",
     "framer-motion": "^12.23.0",
     "next": "15.3.5",

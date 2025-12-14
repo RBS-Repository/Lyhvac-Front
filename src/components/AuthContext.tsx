@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     },
     logout: () => {
       try {
-        const auth = firebaseAuth();
+        const auth = firebaseAuth;
         // Attempt Firebase signOut if Firebase user exists
         signOut(auth).catch(() => {});
       } catch {}

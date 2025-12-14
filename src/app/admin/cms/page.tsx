@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useCMS } from '@/components/CMSContext';
 import type { HeroContent, BannerSlide, ProductAdsContent, MediaReviewsContent, CategorySelectionContent, ContactContent, RightSidebarContent, ContactPageContent } from '@/components/CMSContext';
@@ -21,7 +21,7 @@ interface Category {
   description: string;
 }
 
-export default function CMSAdminPage() {
+function CMSAdminContent() {
   const { cmsData, updateHeroContent, updateBannerSlider, updateProductAds, updateMediaReviews, updateCategorySelection, updateContact, updateRightSidebar, updateContactPage, resetToDefaults } = useCMS();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('hero');
@@ -1160,5 +1160,22 @@ export default function CMSAdminPage() {
         </div>
       </motion.div>
     </AdminLayout>
+  );
+}
+
+export default function CMSAdminPage() {
+  return (
+    <Suspense fallback={
+      <AdminLayout>
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 text-lg">Loading...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    }>
+      <CMSAdminContent />
+    </Suspense>
   );
 }

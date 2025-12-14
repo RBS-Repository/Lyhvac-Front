@@ -90,7 +90,7 @@ const CategoryManagement = () => {
     }
 
     try {
-      const res = await fetch(`${API_URL}/${id}`, {
+      const res = await fetch(API_ENDPOINTS.categoryById(id), {
         method: 'DELETE',
       });
 

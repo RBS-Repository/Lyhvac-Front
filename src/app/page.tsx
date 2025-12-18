@@ -5,6 +5,7 @@ import RightSidebar from '../components/RightSidebar';
 import BottomNavigation from '../components/BottomNavigation';
 import KoreanBannerSlider from '../components/KoreanBannerSlider';
 import KoreanProductBanner from '../components/KoreanProductBanner';
+import ProductShowcaseAds from '../components/ProductShowcaseAds';
 import CategorySelection from '../components/CategorySelection';
 import ProductAds from '../components/ProductAds';
 import Services from '../components/Services';
@@ -19,17 +20,17 @@ export default function Home() {
       <Header />
       <CategorySidebar />
       <RightSidebar />
-    
+
       <main className="">
         <Hero />
-        <KoreanBannerSlider />
-        <KoreanProductBanner />
+
+        <ProductShowcaseAds />
         <CategorySelection />
         <ProductAds />
-       
+
         <MediaReviews />
         <Contact />
-     
+
 
       </main>
       <BottomNavigation />

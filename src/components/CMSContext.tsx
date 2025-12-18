@@ -174,10 +174,36 @@ export interface ContactPageContent {
   faqButton2Link: string;
 }
 
+export interface ShowcaseSlide {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  link: string;
+  buttonText: string;
+  badge?: string;
+  accentColor: string;
+  bgGradient: string;
+  image: string;
+}
+
+export interface ProductShowcaseContent {
+  slides: ShowcaseSlide[];
+  featuredProductsCount: number;
+  featuredProductsFilter: 'recent' | 'featured' | 'random';
+  ctaTitle: string;
+  ctaDescription: string;
+  ctaButtonPrimary: string;
+  ctaButtonSecondary: string;
+  ctaButtonPrimaryLink: string;
+  ctaButtonSecondaryLink: string;
+}
+
 export interface CMSData {
   hero: HeroContent;
   bannerSlider: BannerSlide[];
   productAds: ProductAdsContent;
+  productShowcase: ProductShowcaseContent;
   mediaReviews: MediaReviewsContent;
   categorySelection: CategorySelectionContent;
   contact: ContactContent;
@@ -224,21 +250,21 @@ const getDefaultCMSData = (): CMSData => ({
       }
     ],
     categories: [
-      { 
-        name: "Cooling", 
-        icon: "❄️", 
+      {
+        name: "Cooling",
+        icon: "❄️",
         color: "from-blue-600 to-cyan-400",
         textColor: "text-blue-600"
       },
-      { 
-        name: "Smart Home", 
-        icon: "🏠", 
+      {
+        name: "Smart Home",
+        icon: "🏠",
         color: "from-purple-600 to-pink-400",
         textColor: "text-purple-600"
       },
-      { 
-        name: "Air Quality", 
-        icon: "🌬️", 
+      {
+        name: "Air Quality",
+        icon: "🌬️",
         color: "from-green-600 to-emerald-400",
         textColor: "text-green-600"
       }
@@ -381,50 +407,50 @@ const getDefaultCMSData = (): CMSData => ({
     title: "Browse Our Products",
     description: "Discover LY HVAC's premium heating, ventilation, and air conditioning systems and parts",
     categories: [
-      { 
-        id: 'all', 
+      {
+        id: 'all',
         name: 'All Products',
         icon: '/icons/all.svg',
         iconPlaceholder: '🔍',
         color: 'from-gray-700 to-gray-900'
       },
-      { 
-        id: 'cooling', 
+      {
+        id: 'cooling',
         name: 'Cooling Systems',
         icon: '/icons/cooling.svg',
         iconPlaceholder: '❄️',
         color: 'from-blue-600 to-blue-800'
       },
-      { 
-        id: 'heating', 
+      {
+        id: 'heating',
         name: 'Heating Systems',
         icon: '/icons/heating.svg',
         iconPlaceholder: '🔥',
         color: 'from-red-600 to-red-800'
       },
-      { 
-        id: 'ventilation', 
+      {
+        id: 'ventilation',
         name: 'Ventilation',
         icon: '/icons/ventilation.svg',
         iconPlaceholder: '💨',
         color: 'from-green-600 to-green-800'
       },
-      { 
-        id: 'air-quality', 
+      {
+        id: 'air-quality',
         name: 'Air Quality',
         icon: '/icons/air-quality.svg',
         iconPlaceholder: '🌬️',
         color: 'from-purple-600 to-purple-800'
       },
-      { 
-        id: 'smart-controls', 
+      {
+        id: 'smart-controls',
         name: 'Smart Controls',
         icon: '/icons/smart.svg',
         iconPlaceholder: '🏠',
         color: 'from-indigo-600 to-indigo-800'
       },
-      { 
-        id: 'parts', 
+      {
+        id: 'parts',
         name: 'Parts & Accessories',
         icon: '/icons/parts.svg',
         iconPlaceholder: '🔧',
@@ -704,6 +730,54 @@ const getDefaultCMSData = (): CMSData => ({
     faqButton1Link: "/customer-service",
     faqButton2Text: "About Us",
     faqButton2Link: "/about"
+  },
+  productShowcase: {
+    slides: [
+      {
+        id: 1,
+        title: "Smart Climate Control",
+        subtitle: "INTELLIGENT HVAC SYSTEMS",
+        description: "Experience next-generation climate control with AI-powered efficiency and seamless automation.",
+        image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=2070",
+        link: "/products/smart-controls",
+        buttonText: "DISCOVER",
+        badge: "NEW",
+        accentColor: "from-blue-600 to-indigo-600",
+        bgGradient: "from-blue-900 via-indigo-900 to-purple-900"
+      },
+      {
+        id: 2,
+        title: "Energy Saving Solutions",
+        subtitle: "ECO-FRIENDLY TECHNOLOGY",
+        description: "Reduce your energy costs by up to 40% with our premium eco-friendly HVAC solutions.",
+        image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069",
+        link: "/products/cooling",
+        buttonText: "LEARN MORE",
+        badge: "SAVE 40%",
+        accentColor: "from-green-600 to-emerald-600",
+        bgGradient: "from-emerald-900 via-teal-900 to-cyan-900"
+      },
+      {
+        id: 3,
+        title: "Premium Comfort Series",
+        subtitle: "LUXURY MEETS PERFORMANCE",
+        description: "Whisper-quiet operation, superior air quality, and unmatched reliability for your home.",
+        image: "https://images.unsplash.com/photo-1545259742-24e768f6c041?q=80&w=2070",
+        link: "/products/heating",
+        buttonText: "EXPLORE",
+        badge: "PREMIUM",
+        accentColor: "from-purple-600 to-pink-600",
+        bgGradient: "from-purple-900 via-fuchsia-900 to-pink-900"
+      }
+    ],
+    featuredProductsCount: 3,
+    featuredProductsFilter: 'recent',
+    ctaTitle: "Need Expert Advice on Your HVAC System?",
+    ctaDescription: "Book a free consultation with our HVAC specialists and get personalized recommendations for your home or business.",
+    ctaButtonPrimary: "Get Free Consultation",
+    ctaButtonSecondary: "Browse Products",
+    ctaButtonPrimaryLink: "/contact",
+    ctaButtonSecondaryLink: "/products"
   }
 });
 
@@ -712,6 +786,7 @@ interface CMSContextValue {
   updateHeroContent: (content: HeroContent) => void;
   updateBannerSlider: (banners: BannerSlide[]) => void;
   updateProductAds: (content: ProductAdsContent) => void;
+  updateProductShowcase: (content: ProductShowcaseContent) => void;
   updateMediaReviews: (content: MediaReviewsContent) => void;
   updateCategorySelection: (content: CategorySelectionContent) => void;
   updateContact: (content: ContactContent) => void;
@@ -734,7 +809,7 @@ export const CMSProvider = ({ children }: { children: ReactNode }) => {
         if (stored) {
           const parsed = JSON.parse(stored);
           const defaultData = getDefaultCMSData();
-          
+
           // Merge with defaults to ensure all fields exist (handles data migration)
           const migratedData: CMSData = {
             hero: {
@@ -742,15 +817,19 @@ export const CMSProvider = ({ children }: { children: ReactNode }) => {
               ...parsed.hero,
               selectedCategories: parsed.hero?.selectedCategories || defaultData.hero.selectedCategories,
             },
-            bannerSlider: parsed.bannerSlider || defaultData.bannerSlider,
+            // If stored bannerSlider is missing or empty, fall back to defaults so the admin dashboard always shows slides
+            bannerSlider: parsed.bannerSlider && parsed.bannerSlider.length > 0
+              ? parsed.bannerSlider
+              : defaultData.bannerSlider,
             productAds: parsed.productAds || defaultData.productAds,
+            productShowcase: parsed.productShowcase || defaultData.productShowcase,
             mediaReviews: parsed.mediaReviews || defaultData.mediaReviews,
             categorySelection: parsed.categorySelection || defaultData.categorySelection,
             contact: parsed.contact || defaultData.contact,
             rightSidebar: parsed.rightSidebar || defaultData.rightSidebar,
             contactPage: parsed.contactPage || defaultData.contactPage,
           };
-          
+
           setCmsData(migratedData);
         }
         setIsInitialized(true);
@@ -784,6 +863,9 @@ export const CMSProvider = ({ children }: { children: ReactNode }) => {
     },
     updateProductAds: (content: ProductAdsContent) => {
       setCmsData(prev => ({ ...prev, productAds: content }));
+    },
+    updateProductShowcase: (content: ProductShowcaseContent) => {
+      setCmsData(prev => ({ ...prev, productShowcase: content }));
     },
     updateMediaReviews: (content: MediaReviewsContent) => {
       setCmsData(prev => ({ ...prev, mediaReviews: content }));

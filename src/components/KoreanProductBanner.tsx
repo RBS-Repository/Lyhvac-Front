@@ -131,7 +131,7 @@ const KoreanProductBanner = () => {
             <div className="hidden md:flex items-center justify-center relative">
               <div className="relative w-40 h-40">
                 <Image
-                  src="https://placehold.co/400x400/FFFFFF/FF9900/png?text=Service"
+                  src="https://static.vecteezy.com/system/resources/thumbnails/010/779/593/small/initial-mk-letter-royal-luxury-logo-template-in-art-for-luxurious-branding-projects-and-other-illustration-vector.jpg"
                   alt="Service Illustration"
                   fill
                   style={{ objectFit: 'contain' }}

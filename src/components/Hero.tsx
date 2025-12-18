@@ -47,34 +47,34 @@ const Hero = () => {
           fetch(API_ENDPOINTS.products),
           fetch(API_ENDPOINTS.categories)
         ]);
-        
+
         const productsData = await productsRes.json();
         const categoriesData = await categoriesRes.json();
-        
+
         // Filter categories based on selectedCategories from CMS
         let filteredCategories: Category[] = [];
         if (selectedCategories && selectedCategories.length > 0) {
-          filteredCategories = categoriesData.filter((cat: Category) => 
+          filteredCategories = categoriesData.filter((cat: Category) =>
             selectedCategories.includes(cat._id)
           );
         } else {
           filteredCategories = categoriesData.slice(0, 3);
         }
-        
+
         // Filter products based on selected categories
         let filteredProducts: Product[] = [];
         if (filteredCategories.length > 0) {
           filteredCategories.forEach((category: Category) => {
-            const categoryProduct = productsData.find((p: Product) => 
+            const categoryProduct = productsData.find((p: Product) =>
               p.category === category.name || p.category === category._id
             );
             if (categoryProduct && filteredProducts.length < 3) {
               filteredProducts.push(categoryProduct);
             }
           });
-          
+
           if (filteredProducts.length < 3) {
-            const remaining = productsData.filter((p: Product) => 
+            const remaining = productsData.filter((p: Product) =>
               !filteredProducts.some(fp => fp._id === p._id)
             );
             filteredProducts = [...filteredProducts, ...remaining.slice(0, 3 - filteredProducts.length)];
@@ -82,7 +82,7 @@ const Hero = () => {
         } else {
           filteredProducts = productsData.slice(0, 3);
         }
-        
+
         setProducts(filteredProducts.slice(0, 3));
         setCategories(filteredCategories.slice(0, 3));
       } catch (error) {
@@ -279,9 +279,8 @@ const Hero = () => {
                         <button
                           key={index}
                           onClick={() => setActiveProduct(index)}
-                          className={`w-2 h-2 rounded-full transition-all ${
-                            activeProduct === index ? 'bg-white w-6' : 'bg-white/30'
-                          }`}
+                          className={`w-2 h-2 rounded-full transition-all ${activeProduct === index ? 'bg-white w-6' : 'bg-white/30'
+                            }`}
                           aria-label={`View product ${index + 1}`}
                         />
                       ))}
@@ -439,103 +438,7 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Featured Products Grid */}
-      {products.length > 0 && (
-        <div className={`bg-gradient-to-b from-white to-gray-50 py-20 ${isOpen ? 'md:ml-[310px]' : ''} ${isRightSidebarOpen ? 'lg:mr-[290px]' : ''} transition-all duration-300`}>
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Featured Products
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Discover our top-rated HVAC solutions designed for efficiency, comfort, and innovation
-              </p>
-            </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {products.map((product, index) => (
-                <motion.div
-                  key={product._id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Link
-                    href={`/products/${product._id}`}
-                    className="group block bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100"
-                  >
-                    <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                      <Image
-                        src={product.images[0] || '/placeholder.jpg'}
-                        alt={product.name}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      {product.badge && (
-                        <div className="absolute top-4 right-4 px-3 py-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-bold rounded-full shadow-lg">
-                          {product.badge}
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                    <div className="p-6">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
-                          {product.name}
-                        </h3>
-                        {product.rating && (
-                          <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
-                            {renderStars(product.rating)}
-                          </div>
-                        )}
-                      </div>
-                      <p className="text-gray-600 mb-4 line-clamp-2 text-sm">
-                        {product.shortDescription}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-2xl font-bold text-gray-900">
-                          {formatPrice(product.price)}
-                        </span>
-                        <span className="text-indigo-600 font-semibold text-sm flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span>View</span>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-center mt-12"
-            >
-              <Link
-                href="/products"
-                className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-xl transition-all duration-300 hover:scale-105"
-              >
-                <span>View All Products</span>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

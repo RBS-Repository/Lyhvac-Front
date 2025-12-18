@@ -6,11 +6,11 @@
 const getApiBaseUrl = (): string => {
   // In browser/client-side, use NEXT_PUBLIC_ prefix
   if (typeof window !== 'undefined') {
-    return process.env.NEXT_PUBLIC_API_URL || 'https://lyhvacback.onrender.com';
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
   }
   
   // Server-side rendering
-  return process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'https://lyhvacback.onrender.com';
+  return process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
 };
 
 export const API_BASE_URL = getApiBaseUrl();

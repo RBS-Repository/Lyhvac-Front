@@ -122,9 +122,9 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
   }, []);
 
   const navigation: NavItem[] = [
-    { 
-      name: 'Dashboard', 
-      href: '/admin', 
+    {
+      name: 'Dashboard',
+      href: '/admin',
       description: 'Overview and quick stats',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +132,7 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
         </svg>
       )
     },
-    { 
+    {
       name: 'Content CMS',
       description: 'Manage website content',
       icon: (
@@ -142,8 +142,8 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
       ),
       subItems: [
         { name: 'Hero Section', href: '/admin/cms?tab=hero', icon: '🎯' },
-        { name: 'Banner Slider', href: '/admin/cms?tab=banner', icon: '🎨' },
         { name: 'Product Ads', href: '/admin/cms?tab=ads', icon: '📢' },
+        { name: 'Product Showcase', href: '/admin/cms?tab=product-showcase', icon: '🎪' },
         { name: 'Media & Reviews', href: '/admin/cms?tab=media', icon: '⭐' },
         { name: 'Category Section', href: '/admin/cms?tab=categories', icon: '🏷️' },
         { name: 'Products', href: '/admin/cms?tab=products', icon: '📦' },
@@ -153,8 +153,8 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
         { name: 'Right Sidebar', href: '/admin/cms?tab=sidebar', icon: '📞' },
       ]
     },
-    { 
-      name: 'Products', 
+    {
+      name: 'Products',
       href: '/admin/products',
       description: 'Manage products inventory',
       icon: (
@@ -163,8 +163,8 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
         </svg>
       )
     },
-    { 
-      name: 'Users', 
+    {
+      name: 'Users',
       href: '/admin/users',
       description: 'Manage user accounts',
       icon: (
@@ -206,7 +206,7 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
   };
 
   const toggleExpand = useCallback((name: string) => {
-    setExpandedItems(prev => 
+    setExpandedItems(prev =>
       prev.includes(name) ? prev.filter(item => item !== name) : [...prev, name]
     );
   }, []);
@@ -239,7 +239,7 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Top Navigation Bar */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -296,7 +296,7 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
                 </div>
               </Link>
             </div>
-            
+
             {/* Right: Page Title & Actions */}
             <div className="flex items-center space-x-4">
               {/* Page Title (Desktop) */}
@@ -396,9 +396,8 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
           width: sidebarOpen ? 288 : 0,
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 overflow-hidden z-30 shadow-xl ${
-          mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        } lg:translate-x-0`}
+        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 overflow-hidden z-30 shadow-xl ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          } lg:translate-x-0`}
       >
         <div className="h-full flex flex-col">
           {/* Search Bar */}
@@ -451,140 +450,135 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
-                {hasSubItems ? (
-                  <>
-                    <motion.button
-                      onClick={() => toggleExpand(item.name)}
-                      className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 group ${
-                        pathname?.includes('/admin/cms')
+                  {hasSubItems ? (
+                    <>
+                      <motion.button
+                        onClick={() => toggleExpand(item.name)}
+                        className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 group ${pathname?.includes('/admin/cms')
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
+                            : 'text-gray-700 hover:bg-gray-100'
+                          }`}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        aria-expanded={isExpanded}
+                        aria-controls={`submenu-${item.name}`}
+                      >
+                        <div className="flex items-center space-x-3 flex-1 min-w-0">
+                          <div className={`flex-shrink-0 ${pathname?.includes('/admin/cms') ? 'text-white' : 'text-gray-500'}`}>
+                            {item.icon}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-semibold text-sm block truncate">{item.name}</span>
+                            {item.description && (
+                              <p className={`text-xs mt-0.5 truncate ${pathname?.includes('/admin/cms') ? 'text-indigo-100' : 'text-gray-500'
+                                }`}>
+                                {item.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <motion.svg
+                          className={`w-4 h-4 flex-shrink-0 ${pathname?.includes('/admin/cms') ? 'text-white' : 'text-gray-400'}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </motion.svg>
+                      </motion.button>
+
+                      <motion.div
+                        id={`submenu-${item.name}`}
+                        initial={false}
+                        animate={{
+                          height: isExpanded ? 'auto' : 0,
+                          opacity: isExpanded ? 1 : 0
+                        }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                        aria-hidden={!isExpanded}
+                      >
+                        <div className="ml-2 mt-2 space-y-1 border-l-2 border-gray-200 pl-3">
+                          {item.subItems && item.subItems.length > 0 ? (
+                            item.subItems.map((subItem, subIndex) => {
+                              const isSubActive = currentCMSTab === subItem.href.split('tab=')[1];
+                              return (
+                                <motion.a
+                                  key={subItem.name}
+                                  href={subItem.href}
+                                  onClick={(e) => handleSubItemClick(subItem.href, e)}
+                                  className={`relative flex items-center space-x-2.5 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${isSubActive
+                                      ? 'bg-indigo-50 text-indigo-700 font-semibold shadow-sm border-l-2 border-indigo-600'
+                                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                    }`}
+                                  initial={{ x: -10, opacity: 0 }}
+                                  animate={{ x: 0, opacity: 1 }}
+                                  transition={{ duration: 0.15, delay: subIndex * 0.03 }}
+                                  whileHover={{ x: 2 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  aria-current={isSubActive ? 'page' : undefined}
+                                >
+                                  <span className="text-base flex-shrink-0" aria-hidden="true">{subItem.icon}</span>
+                                  <span className="truncate">{subItem.name}</span>
+                                  {isSubActive && (
+                                    <motion.div
+                                      layoutId="activeIndicator"
+                                      className="absolute right-2 w-2 h-2 bg-indigo-600 rounded-full shadow-sm"
+                                      initial={false}
+                                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                    />
+                                  )}
+                                </motion.a>
+                              );
+                            })
+                          ) : (
+                            searchQuery && (
+                              <p className="px-3 py-2 text-sm text-gray-500">No results found</p>
+                            )
+                          )}
+                        </div>
+                      </motion.div>
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href || '#'}
+                      className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 group relative ${isActive
                           ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
                           : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                      aria-expanded={isExpanded}
-                      aria-controls={`submenu-${item.name}`}
+                        }`}
+                      aria-current={isActive ? 'page' : undefined}
                     >
-                      <div className="flex items-center space-x-3 flex-1 min-w-0">
-                        <div className={`flex-shrink-0 ${pathname?.includes('/admin/cms') ? 'text-white' : 'text-gray-500'}`}>
+                      <motion.div
+                        className="flex items-center space-x-3 w-full"
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                      >
+                        <div className={`flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-500'}`}>
                           {item.icon}
                         </div>
                         <div className="flex-1 min-w-0">
                           <span className="font-semibold text-sm block truncate">{item.name}</span>
                           {item.description && (
-                            <p className={`text-xs mt-0.5 truncate ${
-                              pathname?.includes('/admin/cms') ? 'text-indigo-100' : 'text-gray-500'
-                            }`}>
+                            <p className={`text-xs mt-0.5 truncate ${isActive ? 'text-indigo-100' : 'text-gray-500'}`}>
                               {item.description}
                             </p>
                           )}
                         </div>
-                      </div>
-                      <motion.svg
-                        className={`w-4 h-4 flex-shrink-0 ${pathname?.includes('/admin/cms') ? 'text-white' : 'text-gray-400'}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </motion.svg>
-                    </motion.button>
-                    
-                    <motion.div
-                      id={`submenu-${item.name}`}
-                      initial={false}
-                      animate={{
-                        height: isExpanded ? 'auto' : 0,
-                        opacity: isExpanded ? 1 : 0
-                      }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                      aria-hidden={!isExpanded}
-                    >
-                      <div className="ml-2 mt-2 space-y-1 border-l-2 border-gray-200 pl-3">
-                        {item.subItems && item.subItems.length > 0 ? (
-                          item.subItems.map((subItem, subIndex) => {
-                            const isSubActive = currentCMSTab === subItem.href.split('tab=')[1];
-                            return (
-                              <motion.a
-                                key={subItem.name}
-                                href={subItem.href}
-                                onClick={(e) => handleSubItemClick(subItem.href, e)}
-                                className={`relative flex items-center space-x-2.5 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
-                                  isSubActive
-                                    ? 'bg-indigo-50 text-indigo-700 font-semibold shadow-sm border-l-2 border-indigo-600'
-                                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                                }`}
-                                initial={{ x: -10, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ duration: 0.15, delay: subIndex * 0.03 }}
-                                whileHover={{ x: 2 }}
-                                whileTap={{ scale: 0.98 }}
-                                aria-current={isSubActive ? 'page' : undefined}
-                              >
-                                <span className="text-base flex-shrink-0" aria-hidden="true">{subItem.icon}</span>
-                                <span className="truncate">{subItem.name}</span>
-                                {isSubActive && (
-                                  <motion.div
-                                    layoutId="activeIndicator"
-                                    className="absolute right-2 w-2 h-2 bg-indigo-600 rounded-full shadow-sm"
-                                    initial={false}
-                                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                  />
-                                )}
-                              </motion.a>
-                            );
-                          })
-                        ) : (
-                          searchQuery && (
-                            <p className="px-3 py-2 text-sm text-gray-500">No results found</p>
-                          )
+                        {item.badge && (
+                          <motion.span
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className={`ml-auto px-2 py-0.5 text-xs font-bold rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-pink-500 text-white'
+                              }`}
+                          >
+                            {item.badge}
+                          </motion.span>
                         )}
-                      </div>
-                    </motion.div>
-                  </>
-                ) : (
-                  <Link
-                    href={item.href || '#'}
-                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 group relative ${
-                      isActive
-                        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                    aria-current={isActive ? 'page' : undefined}
-                  >
-                    <motion.div
-                      className="flex items-center space-x-3 w-full"
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                    >
-                      <div className={`flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-500'}`}>
-                        {item.icon}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <span className="font-semibold text-sm block truncate">{item.name}</span>
-                        {item.description && (
-                          <p className={`text-xs mt-0.5 truncate ${isActive ? 'text-indigo-100' : 'text-gray-500'}`}>
-                            {item.description}
-                          </p>
-                        )}
-                      </div>
-                      {item.badge && (
-                        <motion.span
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className={`ml-auto px-2 py-0.5 text-xs font-bold rounded-full ${
-                            isActive ? 'bg-white/20 text-white' : 'bg-pink-500 text-white'
-                          }`}
-                        >
-                          {item.badge}
-                        </motion.span>
-                      )}
-                    </motion.div>
-                  </Link>
-                )}
+                      </motion.div>
+                    </Link>
+                  )}
                 </motion.div>
               );
             })}
@@ -605,9 +599,8 @@ const AdminLayout = ({ children, onCMSTabChange, currentCMSTab }: AdminLayoutPro
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className={`pt-16 transition-all duration-300 ease-in-out ${
-          sidebarOpen ? 'lg:ml-72' : 'lg:ml-0'
-        }`}
+        className={`pt-16 transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:ml-72' : 'lg:ml-0'
+          }`}
       >
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
           {children}

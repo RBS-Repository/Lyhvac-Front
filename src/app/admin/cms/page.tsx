@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useCMS } from '@/components/CMSContext';
-import type { HeroContent, BannerSlide, ProductAdsContent, MediaReviewsContent, CategorySelectionContent, ContactContent, RightSidebarContent, ContactPageContent } from '@/components/CMSContext';
+import type { HeroContent, BannerSlide, ProductAdsContent, ProductShowcaseContent, MediaReviewsContent, CategorySelectionContent, ContactContent, RightSidebarContent, ContactPageContent } from '@/components/CMSContext';
 import ProductManagementCMS from '@/components/ProductManagementCMS';
 import CategoryManagement from '@/components/CategoryManagement';
 import AdminLayout from '@/components/AdminLayout';
@@ -12,7 +12,7 @@ import { FormInput, FormTextarea, FormSelect, FormButton } from '@/components/ad
 import { motion } from 'framer-motion';
 import { API_ENDPOINTS } from '@/lib/api';
 
-type TabType = 'hero' | 'banner' | 'ads' | 'media' | 'categories' | 'products' | 'category-management' | 'contact' | 'contact-page' | 'sidebar';
+type TabType = 'hero' | 'ads' | 'product-showcase' | 'media' | 'categories' | 'products' | 'category-management' | 'contact' | 'contact-page' | 'sidebar';
 
 interface Category {
   _id: string;
@@ -22,7 +22,7 @@ interface Category {
 }
 
 function CMSAdminContent() {
-  const { cmsData, updateHeroContent, updateBannerSlider, updateProductAds, updateMediaReviews, updateCategorySelection, updateContact, updateRightSidebar, updateContactPage, resetToDefaults } = useCMS();
+  const { cmsData, updateHeroContent, updateBannerSlider, updateProductAds, updateProductShowcase, updateMediaReviews, updateCategorySelection, updateContact, updateRightSidebar, updateContactPage, resetToDefaults } = useCMS();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('hero');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -62,7 +62,7 @@ function CMSAdminContent() {
   const handleHeroSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    
+
     // Get selected categories (max 3), remove duplicates
     const selectedCategories: string[] = [];
     const seen = new Set<string>();
@@ -73,7 +73,7 @@ function CMSAdminContent() {
         seen.add(categoryId);
       }
     }
-    
+
     const updatedHero: HeroContent = {
       title: formData.get('hero-title') as string,
       subtitle: formData.get('hero-subtitle') as string,
@@ -82,33 +82,15 @@ function CMSAdminContent() {
       categories: cmsData.hero.categories, // Keep for backward compatibility
       selectedCategories: selectedCategories.slice(0, 3) // Max 3 categories, no duplicates
     };
-    
-    updateHeroContent(updatedHero);
-    showSuccess();
-  };
 
-  const handleBannerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    
-    const updatedBanners: BannerSlide[] = cmsData.bannerSlider.map((banner, index) => ({
-      ...banner,
-      title: formData.get(`banner-${index}-title`) as string,
-      subtitle: formData.get(`banner-${index}-subtitle`) as string,
-      description: formData.get(`banner-${index}-description`) as string,
-      image: formData.get(`banner-${index}-image`) as string,
-      link: formData.get(`banner-${index}-link`) as string,
-      buttonText: formData.get(`banner-${index}-buttonText`) as string,
-    }));
-    
-    updateBannerSlider(updatedBanners);
+    updateHeroContent(updatedHero);
     showSuccess();
   };
 
   const handleProductAdsSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    
+
     const updatedAds: ProductAdsContent = {
       ads: cmsData.productAds.ads.map((ad, index) => ({
         ...ad,
@@ -127,15 +109,46 @@ function CMSAdminContent() {
         link: formData.get(`promo-${index}-link`) as string,
       }))
     };
-    
+
     updateProductAds(updatedAds);
+    showSuccess();
+  };
+
+  const handleProductShowcaseSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    const updatedShowcase: ProductShowcaseContent = {
+      slides: cmsData.productShowcase.slides.map((slide, index) => ({
+        ...slide,
+        title: formData.get(`slide-${index}-title`) as string,
+        subtitle: formData.get(`slide-${index}-subtitle`) as string,
+        description: formData.get(`slide-${index}-description`) as string,
+        link: formData.get(`slide-${index}-link`) as string,
+        buttonText: formData.get(`slide-${index}-buttonText`) as string,
+        badge: formData.get(`slide-${index}-badge`) as string || undefined,
+        accentColor: formData.get(`slide-${index}-accentColor`) as string,
+        bgGradient: formData.get(`slide-${index}-bgGradient`) as string,
+        image: formData.get(`slide-${index}-image`) as string,
+      })),
+      featuredProductsCount: Number(formData.get('featuredProductsCount')),
+      featuredProductsFilter: formData.get('featuredProductsFilter') as 'recent' | 'featured' | 'random',
+      ctaTitle: formData.get('ctaTitle') as string,
+      ctaDescription: formData.get('ctaDescription') as string,
+      ctaButtonPrimary: formData.get('ctaButtonPrimary') as string,
+      ctaButtonSecondary: formData.get('ctaButtonSecondary') as string,
+      ctaButtonPrimaryLink: formData.get('ctaButtonPrimaryLink') as string,
+      ctaButtonSecondaryLink: formData.get('ctaButtonSecondaryLink') as string,
+    };
+
+    updateProductShowcase(updatedShowcase);
     showSuccess();
   };
 
   const handleMediaReviewsSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    
+
     const updatedMedia: MediaReviewsContent = {
       videoUrl: formData.get('video-url') as string,
       videoTitle: formData.get('video-title') as string,
@@ -154,7 +167,7 @@ function CMSAdminContent() {
       customerServiceEmail: formData.get('service-email') as string,
       customerServiceHours: formData.get('service-hours') as string,
     };
-    
+
     updateMediaReviews(updatedMedia);
     showSuccess();
   };
@@ -162,7 +175,7 @@ function CMSAdminContent() {
   const handleCategorySelectionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    
+
     const updatedCategories: CategorySelectionContent = {
       title: formData.get('section-title') as string,
       description: formData.get('section-description') as string,
@@ -173,7 +186,7 @@ function CMSAdminContent() {
       })),
       products: cmsData.categorySelection.products
     };
-    
+
     updateCategorySelection(updatedCategories);
     showSuccess();
   };
@@ -209,7 +222,7 @@ function CMSAdminContent() {
   const handleContactPageSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    
+
     const contactMethods = cmsData.contactPage.contactMethods.map((method, index) => ({
       ...method,
       title: formData.get(`method-${index}-title`) as string,
@@ -240,15 +253,15 @@ function CMSAdminContent() {
       faqButton2Text: formData.get('faqButton2Text') as string,
       faqButton2Link: formData.get('faqButton2Link') as string,
     };
-    
+
     updateContactPage(updatedContactPage);
     showSuccess();
   };
 
   const tabTitles: Record<TabType, { title: string; description: string; icon: string }> = {
     hero: { title: 'Hero Section', description: 'Edit the main hero section on your homepage', icon: '🎯' },
-    banner: { title: 'Banner Slider', description: 'Manage the rotating banner slides', icon: '🎨' },
     ads: { title: 'Product Advertisements', description: 'Manage featured product ads', icon: '📢' },
+    'product-showcase': { title: 'Product Showcase', description: 'Manage product showcase carousel and featured products', icon: '🎪' },
     media: { title: 'Media & Reviews', description: 'Manage video content, awards, and testimonials', icon: '⭐' },
     categories: { title: 'Category Selection', description: 'Manage the category selection section', icon: '🏷️' },
     products: { title: 'Product Management', description: 'Manage all products', icon: '📦' },
@@ -264,14 +277,14 @@ function CMSAdminContent() {
 
   return (
     <AdminLayout onCMSTabChange={handleTabChange} currentCMSTab={activeTab}>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="max-w-7xl mx-auto"
       >
         {/* Header */}
-        <motion.div 
+        <motion.div
           className="mb-8"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -285,17 +298,17 @@ function CMSAdminContent() {
 
         {/* Success Message */}
         {showSuccessMessage && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             className="fixed top-20 right-6 z-50"
           >
             <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-3">
-              <motion.svg 
-                className="w-6 h-6" 
-                fill="none" 
-                stroke="currentColor" 
+              <motion.svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -324,7 +337,7 @@ function CMSAdminContent() {
               <form onSubmit={handleHeroSubmit} className="space-y-6">
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl space-y-4">
                   <h3 className="text-lg font-bold text-gray-900 mb-4">Text Content</h3>
-                  
+
                   <FormInput
                     label="Main Title"
                     name="hero-title"
@@ -358,7 +371,7 @@ function CMSAdminContent() {
                     <p className="text-sm text-gray-600 mb-4">
                       Choose up to 3 categories to display in the hero section. Products will be automatically populated from these categories.
                     </p>
-                    
+
                     {loadingCategories ? (
                       <div className="flex items-center justify-center py-8">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
@@ -369,7 +382,7 @@ function CMSAdminContent() {
                         {[0, 1, 2].map((index) => {
                           // Get currently selected categories in other dropdowns
                           const otherSelected = cmsData.hero.selectedCategories.filter((_, i) => i !== index);
-                          
+
                           return (
                             <div key={index} className="space-y-2">
                               <label className="block text-sm font-medium text-gray-700">
@@ -388,10 +401,10 @@ function CMSAdminContent() {
                                 {categories.map((category) => {
                                   const isSelectedElsewhere = otherSelected.includes(category._id);
                                   const isCurrentSelection = cmsData.hero.selectedCategories[index] === category._id;
-                                  
+
                                   return (
-                                    <option 
-                                      key={category._id} 
+                                    <option
+                                      key={category._id}
                                       value={category._id}
                                       disabled={isSelectedElsewhere && !isCurrentSelection}
                                     >
@@ -410,10 +423,10 @@ function CMSAdminContent() {
                         })}
                       </div>
                     )}
-                    
+
                     <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                       <p className="text-sm text-blue-800">
-                        <strong>Note:</strong> Products shown in the hero section will be automatically fetched from the selected categories. 
+                        <strong>Note:</strong> Products shown in the hero section will be automatically fetched from the selected categories.
                         You can manage products in the <strong>Products</strong> section.
                       </p>
                     </div>
@@ -422,82 +435,6 @@ function CMSAdminContent() {
 
                 <FormButton type="submit" className="w-full">
                   💾 Save Hero Content
-                </FormButton>
-              </form>
-            </Card>
-          )}
-
-          {/* Banner Slider Tab */}
-          {activeTab === 'banner' && (
-            <Card
-              title="Banner Slider Content"
-              description="Manage the rotating banner slides"
-              icon={
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              }
-            >
-              <form onSubmit={handleBannerSubmit} className="space-y-8">
-                {cmsData.bannerSlider.map((banner, index) => (
-                  <div key={index} className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl border-2 border-gray-200 space-y-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-gray-900">Banner Slide {index + 1}</h3>
-                      <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
-                        ID: {banner.id}
-                      </span>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormInput
-                        label="Title"
-                        name={`banner-${index}-title`}
-                        defaultValue={banner.title}
-                        required
-                      />
-                      <FormInput
-                        label="Subtitle"
-                        name={`banner-${index}-subtitle`}
-                        defaultValue={banner.subtitle}
-                        required
-                      />
-                    </div>
-
-                    <FormTextarea
-                      label="Description"
-                      name={`banner-${index}-description`}
-                      defaultValue={banner.description}
-                      rows={3}
-                      required
-                    />
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormInput
-                        label="Image URL"
-                        name={`banner-${index}-image`}
-                        defaultValue={banner.image}
-                        required
-                      />
-                      <FormInput
-                        label="Link URL"
-                        name={`banner-${index}-link`}
-                        defaultValue={banner.link}
-                        required
-                        type="url"
-                      />
-                    </div>
-
-                    <FormInput
-                      label="Button Text"
-                      name={`banner-${index}-buttonText`}
-                      defaultValue={banner.buttonText}
-                      required
-                    />
-                  </div>
-                ))}
-
-                <FormButton type="submit" className="w-full">
-                  💾 Save Banner Slides
                 </FormButton>
               </form>
             </Card>
@@ -522,7 +459,7 @@ function CMSAdminContent() {
                       {cmsData.productAds.ads.map((ad, index) => (
                         <div key={index} className="bg-gray-50 p-6 rounded-xl space-y-4">
                           <h4 className="font-semibold text-gray-900">Ad {index + 1}</h4>
-                          
+
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormInput
                               label="Title"
@@ -578,7 +515,7 @@ function CMSAdminContent() {
                       {cmsData.productAds.specialPromotions.map((promo, index) => (
                         <div key={index} className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-xl space-y-4">
                           <h4 className="font-semibold text-gray-900">Promotion {index + 1}</h4>
-                          
+
                           <FormInput
                             label="Title"
                             name={`promo-${index}-title`}
@@ -616,6 +553,207 @@ function CMSAdminContent() {
 
                   <FormButton type="submit" className="w-full">
                     💾 Save Product Ads
+                  </FormButton>
+                </form>
+              </Card>
+            </div>
+          )}
+
+          {/* Product Showcase Tab */}
+          {activeTab === 'product-showcase' && (
+            <div className="space-y-6">
+              <Card
+                title="Product Showcase"
+                description="Manage product showcase carousel and featured products"
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                }
+              >
+                <form onSubmit={handleProductShowcaseSubmit} className="space-y-8">
+                  {/* Carousel Slides */}
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">Carousel Slides</h3>
+                    <div className="space-y-6">
+                      {cmsData.productShowcase.slides.map((slide, index) => (
+                        <div key={index} className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl border-2 border-gray-200 space-y-4">
+                          <div className="flex items-center just ify-between mb-4">
+                            <h4 className="font-bold text-gray-900">Slide {index + 1}</h4>
+                            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
+                              ID: {slide.id}
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormInput
+                              label="Title"
+                              name={`slide-${index}-title`}
+                              defaultValue={slide.title}
+                              required
+                            />
+                            <FormInput
+                              label="Subtitle"
+                              name={`slide-${index}-subtitle`}
+                              defaultValue={slide.subtitle}
+                              required
+                            />
+                          </div>
+
+                          <FormTextarea
+                            label="Description"
+                            name={`slide-${index}-description`}
+                            defaultValue={slide.description}
+                            rows={3}
+                            required
+                          />
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <FormInput
+                              label="Badge (Optional)"
+                              name={`slide-${index}-badge`}
+                              defaultValue={slide.badge || ''}
+                              placeholder="e.g., NEW, SALE"
+                            />
+                            <FormInput
+                              label="Button Text"
+                              name={`slide-${index}-buttonText`}
+                              defaultValue={slide.buttonText}
+                              required
+                            />
+                            <FormInput
+                              label="Link URL"
+                              name={`slide-${index}-link`}
+                              defaultValue={slide.link}
+                              required
+                              type="url"
+                            />
+                          </div>
+
+                          <FormInput
+                            label="Image URL"
+                            name={`slide-${index}-image`}
+                            defaultValue={slide.image}
+                            required
+                            helpText="Image for the carousel slide"
+                          />
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormInput
+                              label="Accent Color (Tailwind)"
+                              name={`slide-${index}-accentColor`}
+                              defaultValue={slide.accentColor}
+                              required
+                              placeholder="e.g., from-blue-600 to-indigo-600"
+                              helpText="Tailwind gradient classes for accent color"
+                            />
+                            <FormInput
+                              label="Background Gradient (Tailwind)"
+                              name={`slide-${index}-bgGradient`}
+                              defaultValue={slide.bgGradient}
+                              required
+                              placeholder="e.g., from-blue-900 via-indigo-900 to-purple-900"
+                              helpText="Tailwind gradient classes for background"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Featured Products Settings */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">Featured Products Settings</h3>
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl space-y-4">
+                      <p className="text-sm text-gray-700 mb-4">
+                        Products are automatically fetched from your database based on the settings below.
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormSelect
+                          label="Product Filter"
+                          name="featuredProductsFilter"
+                          defaultValue={cmsData.productShowcase.featuredProductsFilter}
+                          required
+                          helpText="How to select products to display"
+                        >
+                          <option value="recent">Recent Products</option>
+                          <option value="featured">Featured Products (with badges)</option>
+                          <option value="random">Random Products</option>
+                        </FormSelect>
+
+                        <FormInput
+                          label="Number of Products"
+                          name="featuredProductsCount"
+                          type="number"
+                          min="1"
+                          max="6"
+                          defaultValue={cmsData.productShowcase.featuredProductsCount.toString()}
+                          required
+                          helpText="How many products to display (1-6)"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CTA Banner Settings */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">Call-to-Action Banner</h3>
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl space-y-4">
+                      <FormInput
+                        label="CTA Title"
+                        name="ctaTitle"
+                        defaultValue={cmsData.productShowcase.ctaTitle}
+                        required
+                      />
+
+                      <FormTextarea
+                        label="CTA Description"
+                        name="ctaDescription"
+                        defaultValue={cmsData.productShowcase.ctaDescription}
+                        rows={3}
+                        required
+                      />
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <FormInput
+                            label="Primary Button Text"
+                            name="ctaButtonPrimary"
+                            defaultValue={cmsData.productShowcase.ctaButtonPrimary}
+                            required
+                          />
+                          <FormInput
+                            label="Primary Button Link"
+                            name="ctaButtonPrimaryLink"
+                            defaultValue={cmsData.productShowcase.ctaButtonPrimaryLink}
+                            required
+                            type="url"
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <FormInput
+                            label="Secondary Button Text"
+                            name="ctaButtonSecondary"
+                            defaultValue={cmsData.productShowcase.ctaButtonSecondary}
+                            required
+                          />
+                          <FormInput
+                            label="Secondary Button Link"
+                            name="ctaButtonSecondaryLink"
+                            defaultValue={cmsData.productShowcase.ctaButtonSecondaryLink}
+                            required
+                            type="url"
+                            className="mt-2"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <FormButton type="submit" className="w-full">
+                    💾 Save Product Showcase
                   </FormButton>
                 </form>
               </Card>
@@ -844,7 +982,7 @@ function CMSAdminContent() {
 
                 <div className="bg-gray-50 p-6 rounded-xl space-y-4">
                   <h3 className="text-lg font-bold text-gray-900 mb-4">Contact Information</h3>
-                  
+
                   <FormInput
                     label="Phone Number"
                     name="phone"
@@ -893,7 +1031,7 @@ function CMSAdminContent() {
               <form onSubmit={handleSidebarSubmit} className="space-y-6">
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl space-y-4">
                   <h3 className="text-lg font-bold text-gray-900 mb-4">Customer Service Details</h3>
-                  
+
                   <FormInput
                     label="Phone Number"
                     name="phone"
@@ -950,7 +1088,7 @@ function CMSAdminContent() {
                 {/* Hero Section */}
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl space-y-4">
                   <h3 className="text-lg font-bold text-gray-900 mb-4">Hero Section</h3>
-                  
+
                   <FormInput
                     label="Page Title"
                     name="heroTitle"
@@ -973,7 +1111,7 @@ function CMSAdminContent() {
                   {cmsData.contactPage.contactMethods.map((method, index) => (
                     <div key={index} className="bg-white p-6 rounded-lg border border-gray-200 space-y-4">
                       <h4 className="font-semibold text-gray-900">Contact Method {index + 1}</h4>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormInput
                           label="Title"
@@ -1014,7 +1152,7 @@ function CMSAdminContent() {
                 {/* Office Location */}
                 <div className="bg-green-50 p-6 rounded-xl space-y-4">
                   <h3 className="text-lg font-bold text-gray-900 mb-4">Office Location</h3>
-                  
+
                   <FormInput
                     label="Company Name"
                     name="companyName"
@@ -1061,7 +1199,7 @@ function CMSAdminContent() {
                 {/* FAQ Section */}
                 <div className="bg-yellow-50 p-6 rounded-xl space-y-4">
                   <h3 className="text-lg font-bold text-gray-900 mb-4">FAQ Section</h3>
-                  
+
                   <FormInput
                     label="FAQ Title"
                     name="faqTitle"

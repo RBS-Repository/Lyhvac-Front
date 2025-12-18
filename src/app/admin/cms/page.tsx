@@ -495,7 +495,8 @@ function CMSAdminContent() {
                               name={`ad-${index}-link`}
                               defaultValue={ad.link}
                               required
-                              type="url"
+                              placeholder="e.g., /products or https://example.com"
+                              helpText="Accepts both internal paths and external URLs"
                             />
                             <FormInput
                               label="Image URL"
@@ -543,7 +544,8 @@ function CMSAdminContent() {
                               name={`promo-${index}-link`}
                               defaultValue={promo.link}
                               required
-                              type="url"
+                              placeholder="e.g., /products or https://example.com"
+                              helpText="Accepts both internal paths and external URLs"
                             />
                           </div>
                         </div>
@@ -784,8 +786,8 @@ function CMSAdminContent() {
                     name="video-url"
                     defaultValue={cmsData.mediaReviews.videoUrl}
                     required
-                    type="url"
-                    helpText="Enter YouTube or video URL"
+                    placeholder="e.g., https://youtube.com/watch?v=... or https://vimeo.com/..."
+                    helpText="Enter YouTube, Vimeo, or any video URL"
                   />
                   <FormInput
                     label="Video Title"
@@ -1230,7 +1232,8 @@ function CMSAdminContent() {
                       name="faqButton1Link"
                       defaultValue={cmsData.contactPage.faqButton1Link}
                       required
-                      type="url"
+                      placeholder="e.g., /contact or https://example.com"
+                      helpText="Accepts both internal paths and external URLs"
                     />
                   </div>
 
@@ -1246,7 +1249,8 @@ function CMSAdminContent() {
                       name="faqButton2Link"
                       defaultValue={cmsData.contactPage.faqButton2Link}
                       required
-                      type="url"
+                      placeholder="e.g., /about or https://example.com"
+                      helpText="Accepts both internal paths and external URLs"
                     />
                   </div>
                 </div>

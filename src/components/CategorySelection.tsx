@@ -7,21 +7,11 @@ import { useSidebar } from './CategorySidebar';
 import { useCMS } from './CMSContext';
 import { API_ENDPOINTS } from '@/lib/api';
 
-interface Category {
-  _id: string;
-  name: string;
-  slug: string;
-  description: string;
-  image?: string; // Add image field if your CMS supports it
-}
-
 const CategorySelection = () => {
   const { isOpen, isRightSidebarOpen } = useSidebar();
   const { cmsData } = useCMS();
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const { title, description } = cmsData.categorySelection;
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -30,7 +20,7 @@ const CategorySelection = () => {
         const data = await res.json();
         setCategories(data);
       } catch (error) {
-        console.error('Failed to fetch categories:', error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -39,56 +29,60 @@ const CategorySelection = () => {
   }, []);
 
   return (
-    <section className={`py-16 bg-white ${isOpen ? 'md:ml-[310px]' : ''} ${isRightSidebarOpen ? 'lg:mr-[290px]' : ''} transition-all duration-500`}>
+    <section className={`py-16 bg-gray-50/50 transition-all duration-500 ${isOpen ? 'md:ml-[310px]' : ''} ${isRightSidebarOpen ? 'lg:mr-[290px]' : ''}`}>
       <div className="container mx-auto px-6 max-w-7xl">
 
-        {/* Simplified Header */}
-        <div className="text-center mb-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
-          >
-            {title || "Shop by Category"}
-          </motion.h2>
-          <motion.p className="text-gray-500 max-w-xl mx-auto">
-            {description || "Explore our curated collections across all departments."}
-          </motion.p>
+        {/* Header - Aligned with a clean professional look */}
+        <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
+              Shop by Department
+            </h2>
+            <p className="text-gray-500 mt-2 max-w-lg">
+              Select a category to filter our full range of professional products.
+            </p>
+          </div>
+          <Link href="/products" className="text-sm font-semibold text-blue-600 hover:text-blue-700 underline underline-offset-4">
+            View All Categories
+          </Link>
         </div>
 
-        {/* Category Grid - 2 to 4 columns depending on screen */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        {/* Scalable Grid - Handles any number of categories */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {loading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-40 bg-gray-100 animate-pulse rounded-2xl" />
+            Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="h-24 bg-white border border-gray-100 rounded-2xl animate-pulse" />
             ))
           ) : (
-            categories.map((category, index) => (
+            categories.map((cat, i) => (
               <motion.div
-                key={category._id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ y: -5 }}
+                key={cat._id}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
               >
                 <Link
-                  href={`/products?category=${category.slug}`}
-                  className="group relative block aspect-square md:aspect-video lg:aspect-square overflow-hidden rounded-2xl bg-gray-100 border border-gray-100 shadow-sm"
+                  href={`/products?category=${cat.slug}`}
+                  className="group relative flex items-center p-6 bg-white border border-gray-200 rounded-2xl transition-all duration-300 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-1"
                 >
-                  {/* Background Decoration (Optional: Use real images if available) */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 group-hover:from-blue-600 group-hover:to-indigo-700 transition-colors duration-300" />
-
-                  <div className="relative h-full p-6 flex flex-col justify-end">
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-white transition-colors">
-                      {category.name}
-                    </h3>
-                    <p className="text-xs text-gray-500 group-hover:text-blue-100 mt-1 line-clamp-1 transition-colors">
-                      {category.description}
-                    </p>
-                    <div className="mt-4 flex items-center text-blue-600 group-hover:text-white text-sm font-semibold">
-                      Browse →
-                    </div>
+                  {/* Icon Placeholder / Initial Letter */}
+                  <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 font-bold text-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    {cat.name.charAt(0)}
                   </div>
+
+                  <div className="ml-4 overflow-hidden">
+                    <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                      {cat.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 line-clamp-1">
+                      Explore Series →
+                    </p>
+                  </div>
+
+                  {/* Subtle Background Number */}
+                  <span className="absolute top-4 right-6 text-4xl font-black text-gray-50 group-hover:text-blue-50 transition-colors pointer-events-none">
+                    {i + 1}
+                  </span>
                 </Link>
               </motion.div>
             ))

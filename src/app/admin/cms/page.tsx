@@ -626,7 +626,8 @@ function CMSAdminContent() {
                               name={`slide-${index}-link`}
                               defaultValue={slide.link}
                               required
-                              type="url"
+                              placeholder="e.g., /products/heating or https://example.com"
+                              helpText="Accepts both internal paths (/products/...) and external URLs (https://...)"
                             />
                           </div>
 
@@ -728,8 +729,9 @@ function CMSAdminContent() {
                             name="ctaButtonPrimaryLink"
                             defaultValue={cmsData.productShowcase.ctaButtonPrimaryLink}
                             required
-                            type="url"
+                            placeholder="e.g., /contact or https://example.com"
                             className="mt-2"
+                            helpText="Accepts both internal paths and external URLs"
                           />
                         </div>
                         <div>
@@ -744,8 +746,9 @@ function CMSAdminContent() {
                             name="ctaButtonSecondaryLink"
                             defaultValue={cmsData.productShowcase.ctaButtonSecondaryLink}
                             required
-                            type="url"
+                            placeholder="e.g., /products or https://example.com"
                             className="mt-2"
+                            helpText="Accepts both internal paths and external URLs"
                           />
                         </div>
                       </div>
